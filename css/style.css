@@ -383,16 +383,14 @@ body {
     height: 100%; }
   .download-status_active {
     display: block;
-    -webkit-transition: all 30s linear 0s;
-    -moz-transition: all 30s linear 0s;
-    -ms-transition: all 30s linear 0s;
-    -o-transition: all 30s linear 0s;
-    transition: all 30s linear 0s;
-    -moz-transform: rotate(12000deg);
-    -ms-transform: rotate(12000deg);
-    -webkit-transform: rotate(12000deg);
-    -o-transform: rotate(12000deg);
-    transform: rotate(12000deg); }
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-animation: rotate 1s linear infinite;
+    animation: rotate 1s linear infinite; }
 
 .section__technology-list {
   width: 100%;
@@ -417,8 +415,6 @@ body {
   align-items: center; }
   .section__technology-list_unvisible {
     display: none; }
-  .section__technology-list span {
-    text-align: center; }
 
 .section__technology-item {
   width: 100%;
@@ -435,3 +431,24 @@ body {
     background-color: #eee; }
   .section__technology-item_active {
     font-weight: bold; }
+
+.test-elem {
+  font-size: 30px;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-animation: rotate 1s linear infinite;
+  animation: rotate 1s linear infinite; }
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+
+@keyframes rotate {
+  from {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }

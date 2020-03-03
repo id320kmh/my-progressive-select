@@ -1,11 +1,30 @@
 //@prepros-append index.js
 
+//-------------- Console log STYLE ------------------------------------------
+
+const consoleStyles =  {
+    'h1': 'font: 2.5em/1 Arial; color: crimson;',
+    'h2': 'font: 2em/1 Arial; color: orangered;',
+    'h3': 'font: 1.5em/1 Arial; color: olivedrab;',
+    'bold': 'font: bold 1.3em/1 Arial; color: midnightblue;',
+    'warn': 'padding: 0 .5rem; background: crimson; font: 1.6em/1 Arial; color: white;'
+};
+
+function log ( msg, style ) {
+    if ( !style || !consoleStyles[ style ] ) {
+        style = 'bold';
+    }
+    console.log ( '%c' + msg, consoleStyles[ style ] );
+}
+
+//---------------------------------------------------------------------------
 
 const progressiveSelectOptions = {
     selector: '.section__button-container',
     label: 'Choose Technology',
     url: 'https://test1-c0ab0.firebaseio.com/technology.json'
 }
+
 
 // ----- Класс нашего селектора, который содержит конструктор 
 class ProgressiveSelect{
@@ -17,48 +36,92 @@ class ProgressiveSelect{
     listState = false; // --- флаг иконки открытого/закрытого списка  
     choiceState = false; // --- флаг выбран ли какой-то элемент со списка
     list = [];
-    //----- changeListIcon() - функция отслеживает флаг listState и переворачивает иконку 
-    changeListIcon() {
-        let that = this;
-        const mySelectContainer = document.querySelector(this.selector);
-        const mySelectButton = mySelectContainer.querySelector('.section__button');
-        const mySelectStateIcon = mySelectContainer.querySelector('.my-select-state-icon');
-        const myLabel = mySelectContainer.querySelector('.my-label');
-        const techListElement = document.getElementsByClassName('section__technology-list')[0];
-        
 
-        mySelectButton.addEventListener('click', function() {
+    init() {
+        // this.changeListIcon();
+        this.cacheElements();
+        this.bindEvents();
+    }
+    cacheElements(){
+        this.$doc = document;
+        this.$body = document.body;
+        this.$mySelectButton = document.querySelector(this.selector).querySelector('.section__button');
+        this.$mySelectStateIcon = document.querySelector(this.selector).querySelector('.my-select-state-icon');
+        this.$myLabel = document.querySelector(this.selector).querySelector('.my-label');
+        this.$techListElement = document.getElementsByClassName('section__technology-list')[0];
+
+        this.$listItem = document.getElementsByClassName('section__technology-item');
+        this.$selectInput = document.getElementsByClassName('section__button')[0];
+    }
+    bindEvents() {
+        let that = this;
+
+        document.addEventListener('click', function (event) {
+            that.closeList(event.target);
+        }, false);
+
+        this.$mySelectButton.addEventListener('click', function() {
             if (!that.listState) {
-                mySelectStateIcon.classList.toggle("list-button-state-1");
-                mySelectStateIcon.classList.toggle("list-button-state-2");
-                myLabel.classList.add("my-label_active");
-                if (!that.list.length) { 
-                    that.getList(that.url); 
-                } 
-                techListElement.classList.remove('section__technology-list_unvisible');   
-                that.listState = !that.listState;
+                that.animChanges().stateFirst();
             } else {
-                mySelectStateIcon.classList.toggle("list-button-state-2");
-                mySelectStateIcon.classList.toggle("list-button-state-1");
-                console.log(that.choiceState);
-                
-                if (!that.choiceState) {
-                    myLabel.classList.remove("my-label_active");
-                }
-                techListElement.classList.add('section__technology-list_unvisible');
-                that.listState = !that.listState;
+                that.animChanges().stateSecond();
             }
         });
+        
     }
+
+    closeList(elem) {
+
+        // console.log(that.listState);
+        // log('Clicked outside list', 'bold');
+        
+        if ( this.listState 
+            && elem.classList[0] !== 'section__button' 
+            && elem.classList[0] !== 'section__technology-list' 
+            && elem.classList[0] !== 'section__technology-item') {
+            this.animChanges().stateSecond();
+        }
+        
+        
+    }
+    animChanges() {
+
+        return {
+            stateFirst: () => {
+                this.$mySelectStateIcon.classList.toggle("list-button-state-1");
+                this.$mySelectStateIcon.classList.toggle("list-button-state-2");
+                this.$myLabel.classList.add("my-label_active");
+                this.$techListElement.classList.remove('section__technology-list_unvisible');   
+                if (!this.list.length) {                     
+                    this.getList(this.url); 
+                } 
+                this.listState = !this.listState;
+            },
+            stateSecond: () => {
+                this.$mySelectStateIcon.classList.toggle("list-button-state-2");
+                this.$mySelectStateIcon.classList.toggle("list-button-state-1");
+                
+                if (!this.choiceState) {
+                    this.$myLabel.classList.remove("my-label_active");
+                }
+                this.$techListElement.classList.add('section__technology-list_unvisible');
+                this.listState = !this.listState;
+            }
+        }
+    }
+
     async getList(userURL) {
-        const downloadStatus = document.getElementsByClassName('download-status')[0];
-        downloadStatus.classList.add('download-status_active');
-        console.log('Starting receiving...');
+
+        this.animateDownloadStatus().start(); 
+        
+        console.log('Started receiving data...');
         
         let response = await fetch(userURL);
         const reader = response.body.getReader();
 
         const contentLength = +response.headers.get('Content-Length');
+        // console.log(contentLength);
+        
 
         let receivedLength = 0; 
         let chunks = [];
@@ -66,8 +129,9 @@ class ProgressiveSelect{
             const {done, value} = await reader.read();
 
             if (done) {        
-                downloadStatus.classList.remove('download-status_active');
-                console.log('Receiving has received!');
+                // downloadStatus.classList.remove('download-status_active');
+                this.animateDownloadStatus().stop(); 
+                console.log('Receiving has done!');
                 break; 
             }
 
@@ -88,6 +152,19 @@ class ProgressiveSelect{
         this.showList( JSON.parse(result) );
 
     }
+
+    animateDownloadStatus() {
+        const downloadStatus = document.getElementsByClassName('download-status')[0];
+        return {
+            start: () => {
+                downloadStatus.classList.add('download-status_active');
+            },
+            stop: () => {
+                downloadStatus.classList.remove('download-status_active');
+            }
+        }
+    }
+
     showList(technology) {
         const techListElement = document.getElementsByClassName('section__technology-list')[0];
 
@@ -132,7 +209,7 @@ class ProgressiveSelect{
 
 
 const myProgressiveSelector = new ProgressiveSelect(progressiveSelectOptions);
-myProgressiveSelector.changeListIcon();
+myProgressiveSelector.init();
 
 
 
