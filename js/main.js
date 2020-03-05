@@ -243,48 +243,6 @@ class ProgressiveSelect{
         }
     }
 
-    /*async getList(userURL) {
-
-        this.animateDownloadStatus().start(); 
-        
-        console.log('Started receiving data...');
-        
-        let response = await fetch(userURL);
-        const reader = response.body.getReader();
-
-        const contentLength = +response.headers.get('Content-Length');
-        // console.log(contentLength);
-        
-
-        let receivedLength = 0; 
-        let chunks = [];
-        while(true) {
-            const {done, value} = await reader.read();
-
-            if (done) {        
-                this.animateDownloadStatus().stop(); 
-                console.log('Receiving has done!');
-                break; 
-            }
-
-            chunks.push(value);
-            receivedLength += value.length;
-
-            console.log(`Получено ${receivedLength} из ${contentLength}`)
-        }
-
-        let chunksAll = new Uint8Array(receivedLength); 
-        let position = 0;
-        for(let chunk of chunks) {
-            chunksAll.set(chunk, position);
-            position += chunk.length;
-        }
-
-        let result = new TextDecoder("utf-8").decode(chunksAll);
-        this.showList( JSON.parse(result) );
-
-    }*/
-
     animateDownloadStatus() {
         return {
             start: () => {
