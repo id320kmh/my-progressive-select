@@ -414,6 +414,8 @@ class ProgressiveSelect{
             this.activeItem = { num: null, name: '' }; 
         }
         this.choiceState = false; 
+        this.changeElemClasses().myList_Closed(this);
+        this.listState = false; 
                
     }
 
