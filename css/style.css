@@ -238,7 +238,7 @@ body {
     justify-content: center; }
   @media (max-width: 600px) {
     .section__column {
-      padding: 20px; } }
+      padding: 50px; } }
 
 .action-list {
   width: 50%;
@@ -255,6 +255,10 @@ body {
   .action-list__result {
     margin-top: 30px;
     font-size: 26px; }
+    .action-list__result span {
+      font-weight: bold;
+      font-size: 22px;
+      color: #007a00; }
   @media (max-width: 1250px) {
     .action-list {
       width: 60%; } }
@@ -324,7 +328,7 @@ body {
     z-index: 1; }
     @media (max-width: 600px) {
       .section__button-container label {
-        font-size: 30px; } }
+        font-size: 26px; } }
   .section__button-container .my-label_active {
     -webkit-transition: all 0.2s linear 0s;
     -moz-transition: all 0.2s linear 0s;
@@ -335,6 +339,9 @@ body {
     top: -20px !important;
     color: #000063;
     font-weight: normal; }
+    @media (max-width: 600px) {
+      .section__button-container .my-label_active {
+        font-size: 20px; } }
   .section__button-container .my-label_unactive {
     -webkit-transition: all 0.2s linear 0s;
     -moz-transition: all 0.2s linear 0s;
@@ -354,7 +361,8 @@ body {
       border-bottom: 2px solid #666; }
     @media (max-width: 600px) {
       .section__button-container input {
-        height: 50px; } }
+        height: 50px;
+        font-size: 26px; } }
   .section__button-container a {
     width: 15px;
     height: 15px;
@@ -412,7 +420,8 @@ body {
   padding: 15px 10px;
   -webkit-box-align: center;
   -ms-flex-align: center;
-  align-items: center; }
+  align-items: center;
+  overflow: hidden; }
   .section__technology-list_unvisible {
     display: none; }
 
@@ -432,17 +441,6 @@ body {
   .section__technology-item_active {
     font-weight: bold; }
 
-.test-elem {
-  font-size: 30px;
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-animation: rotate 1s linear infinite;
-  animation: rotate 1s linear infinite; }
-
 @-webkit-keyframes rotate {
   from {
     -webkit-transform: rotate(360deg);
@@ -452,3 +450,7 @@ body {
   from {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); } }
+
+.noLink {
+  pointer-events: none;
+  opacity: 0.5; }
